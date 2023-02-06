@@ -6,7 +6,7 @@
         tools:ignore="ScopedStorage" />
 
    <application
-        android:label="melody_mate"
+        android:label="Melody Mate"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity
