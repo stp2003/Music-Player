@@ -64,43 +64,64 @@ class HomeScreen extends StatelessWidget {
               padding: const EdgeInsets.all(10.0),
               child: ListView.builder(
                 physics: const BouncingScrollPhysics(),
-                itemCount: snapshot.data?.length,
+                itemCount: snapshot.data!.length,
                 // itemCount: 100,
                 itemBuilder: (BuildContext context, int index) {
                   return Container(
                     margin: const EdgeInsets.only(bottom: 12.0),
-                    child: ListTile(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(18.0),
-                      ),
-                      tileColor: bgColor,
-                      title: Text(
-                        snapshot.data![index].displayNameWOExt,
-                        style: const TextStyle(
-                          fontFamily: 'poppins_bold',
-                          fontSize: 16.5,
-                          color: whiteColor,
-                          letterSpacing: 1.2,
+                    child: Obx(
+                      () => ListTile(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(18.0),
                         ),
-                      ),
-                      subtitle: Text(
-                        '${snapshot.data![index].artist}',
-                        style: const TextStyle(
-                          fontFamily: 'poppins',
-                          fontSize: 12.5,
-                          color: whiteColor,
-                          letterSpacing: 0.8,
+                        tileColor: bgColor,
+                        title: Text(
+                          snapshot.data![index].displayNameWOExt,
+                          style: const TextStyle(
+                            fontFamily: 'poppins_bold',
+                            fontSize: 16.5,
+                            color: whiteColor,
+                            letterSpacing: 1.2,
+                          ),
                         ),
-                      ),
-                      leading: const Icon(
-                        Icons.music_note,
-                        color: whiteColor,
-                        size: 32.0,
-                      ),
-                      trailing: const Icon(
-                        Icons.play_arrow_sharp,
-                        color: whiteColor,
-                        size: 26.0,
+                        subtitle: Text(
+                          '${snapshot.data![index].artist}',
+                          style: const TextStyle(
+                            fontFamily: 'poppins',
+                            fontSize: 12.5,
+                            color: whiteColor,
+                            letterSpacing: 0.8,
+                          ),
+                        ),
+
+                        //**** leading photo if any ->
+                        leading: QueryArtworkWidget(
+                          id: snapshot.data![index].id,
+                          type: ArtworkType.AUDIO,
+                          nullArtworkWidget: const Icon(
+                            Icons.music_note,
+                            color: whiteColor,
+                            size: 32.0,
+                          ),
+                        ),
+
+                        //** show only when a song is selected ->
+                        trailing: controller.playIndex.value == index &&
+                                controller.isPlaying.value
+                            ? const Icon(
+                                Icons.play_arrow_sharp,
+                                color: whiteColor,
+                                size: 26.0,
+                              )
+                            : null,
+
+                        //??? for playing music ->
+                        onTap: () {
+                          controller.playSongs(
+                            snapshot.data![index].uri,
+                            index,
+                          );
+                        },
                       ),
                     ),
                   );
