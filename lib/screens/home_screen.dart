@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:melody_mate/constants/colors.dart';
 import 'package:melody_mate/controller/player_controller.dart';
+import 'package:melody_mate/screens/player_screen.dart';
 import 'package:on_audio_query/on_audio_query.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -117,10 +118,11 @@ class HomeScreen extends StatelessWidget {
 
                         //??? for playing music ->
                         onTap: () {
-                          controller.playSongs(
-                            snapshot.data![index].uri,
-                            index,
-                          );
+                          Get.to(() => const Player());
+                          // controller.playSongs(
+                          //   snapshot.data![index].uri,
+                          //   index,
+                          // );
                         },
                       ),
                     ),
