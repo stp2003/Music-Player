@@ -1,34 +1,57 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:melody_mate/constants/colors.dart';
+import 'package:on_audio_query/on_audio_query.dart';
+
+import '../controller/player_controller.dart';
 
 class Player extends StatelessWidget {
-  const Player({Key? key}) : super(key: key);
+  final SongModel data;
+
+  const Player({
+    Key? key,
+    required this.data,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    //***
+    var controller = Get.find<PlayerController>();
+
     return Scaffold(
       backgroundColor: bgColor,
       appBar: AppBar(),
       body: Padding(
-        padding: const EdgeInsets.all(8.0),
+        padding: const EdgeInsets.fromLTRB(8.0, 8.0, 8.0, 0),
         child: Column(
           children: [
             //***
             Expanded(
               child: Container(
+                clipBehavior: Clip.antiAliasWithSaveLayer,
+                height: 300.0,
+                width: 300.0,
                 decoration: const BoxDecoration(
                   shape: BoxShape.circle,
-                  color: Colors.red,
+                  color: Colors.grey,
                 ),
                 alignment: Alignment.center,
-                child: const Icon(
-                  Icons.music_note,
+                child: QueryArtworkWidget(
+                  id: data.id,
+                  type: ArtworkType.AUDIO,
+                  artworkHeight: double.infinity,
+                  artworkWidth: double.infinity,
+                  nullArtworkWidget: const Icon(
+                    Icons.music_note,
+                    size: 48.0,
+                    color: whiteColor,
+                  ),
                 ),
               ),
             ),
 
             const SizedBox(
-              height: 15.0,
+              height: 10.0,
             ),
 
             //***
@@ -48,23 +71,23 @@ class Player extends StatelessWidget {
                 //*** name of music ->
                 child: Column(
                   children: [
-                    const Text(
-                      'Music Name',
-                      style: TextStyle(
+                    Text(
+                      data.displayNameWOExt,
+                      style: const TextStyle(
                         color: bgDarkColor,
                         fontFamily: 'poppins_bold',
-                        fontSize: 24.0,
+                        fontSize: 22.0,
                       ),
                     ),
                     const SizedBox(
                       height: 12.0,
                     ),
-                    const Text(
-                      'Artist Name',
-                      style: TextStyle(
+                    Text(
+                      data.artist.toString(),
+                      style: const TextStyle(
                         color: bgDarkColor,
                         fontFamily: 'poppins',
-                        fontSize: 19.0,
+                        fontSize: 17.0,
                       ),
                     ),
                     const SizedBox(
@@ -116,18 +139,33 @@ class Player extends StatelessWidget {
                           ),
                           splashColor: Colors.cyanAccent,
                         ),
-                        CircleAvatar(
-                          backgroundColor: bgDarkColor,
-                          radius: 35.0,
-                          child: Transform.scale(
-                            scale: 2.5,
-                            child: IconButton(
-                              onPressed: () {},
-                              icon: const Icon(
-                                Icons.play_arrow_rounded,
-                                color: whiteColor,
+                        Obx(
+                          () => CircleAvatar(
+                            backgroundColor: bgDarkColor,
+                            radius: 35.0,
+                            child: Transform.scale(
+                              scale: 2.5,
+                              child: IconButton(
+                                onPressed: () {
+                                  if (controller.isPlaying.value) {
+                                    controller.audioPlayer.pause();
+                                    controller.isPlaying(false);
+                                  } else {
+                                    controller.audioPlayer.play();
+                                    controller.isPlaying(true);
+                                  }
+                                },
+                                icon: controller.isPlaying.value
+                                    ? const Icon(
+                                        Icons.pause,
+                                        color: whiteColor,
+                                      )
+                                    : const Icon(
+                                        Icons.play_arrow_rounded,
+                                        color: whiteColor,
+                                      ),
+                                splashColor: Colors.greenAccent,
                               ),
-                              splashColor: Colors.greenAccent,
                             ),
                           ),
                         ),

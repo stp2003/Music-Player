@@ -118,11 +118,16 @@ class HomeScreen extends StatelessWidget {
 
                         //??? for playing music ->
                         onTap: () {
-                          Get.to(() => const Player());
-                          // controller.playSongs(
-                          //   snapshot.data![index].uri,
-                          //   index,
-                          // );
+                          Get.to(
+                            () => Player(
+                              data: snapshot.data![index],
+                            ),
+                            transition: Transition.downToUp,
+                          );
+                          controller.playSongs(
+                            snapshot.data![index].uri,
+                            index,
+                          );
                         },
                       ),
                     ),
